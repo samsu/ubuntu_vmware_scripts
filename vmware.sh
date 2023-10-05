@@ -38,6 +38,8 @@ set -x
 echo -e "download compile the modules: vmmon and vmnet\n"
 if [[ -d "$codes/$repo" ]]; then
     cd "$codes/$repo"
+    rm -rf vmnet-only vmmon-only
+    git checkout .
     git remote update
 else
     cd "$codes"
