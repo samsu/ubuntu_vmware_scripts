@@ -5,7 +5,7 @@ vmware=$1
 vmware=${vmware:-'workstation-17.0.2'}
 # compile the missing modules
 codes=$2
-codes=${codes:-'/tmp'}
+codes=${codes:-'/home/samsu/workshop/codes'}
 
 function _help {
 cat << EOM
@@ -47,15 +47,17 @@ else
     cd "$repo"
 fi
 
-git checkout $vmware
-if [ $? -ne 0 ]; then
+
+if ! git checkout $vmware; then
     echo -e "\nError: cannot find the version: '$vmware'\n"
     _help
 fi
 git pull
 
-diff /sys/kernel/btf/vmlinux /usr/lib/modules/`uname -r`/build/vmlinux
-if [ $? -ne 0 ]; then
+set -x
+
+
+if diff /sys/kernel/btf/vmlinux /usr/lib/modules/`uname -r`/build/vmlinux; then
     sudo cp /sys/kernel/btf/vmlinux /usr/lib/modules/`uname -r`/build/
 fi
 
@@ -65,7 +67,7 @@ sudo make && sudo make install
 #sign complied VMware modules if security boot enabled
 mokutil --sb-state | grep enabled
 _new_key=false
-if [ $? -eq 0 ]; then
+if mokutil --sb-state | grep enabled; then
     if [[ ! -f $codes/MOK.der ]]; then
       # Generate a key pair using the openssl to sign vmmon and vmnet modules
       openssl req -new -x509 -newkey rsa:2048 -keyout MOK.priv -outform DER -out MOK.der -nodes -days 36500 -subj "/CN=VMware/"

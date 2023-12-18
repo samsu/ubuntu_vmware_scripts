@@ -5,7 +5,7 @@ If VMware Workstation or VMware Player was installed on Ubuntu 22.04, and it ini
 The script automates the process to address this problem.
 
 Usage:
-vmware.sh [VMware Workstation|Player version] [Path to download VMware host modules]
+vmware_compile.sh [VMware Workstation|Player version] [Path to download VMware host modules]
 
 Example:
 sudo bash vmware.sh workstation-17.0.2 /tmp
